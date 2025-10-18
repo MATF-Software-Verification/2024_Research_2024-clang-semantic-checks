@@ -6,7 +6,7 @@ Authors (alphabetical):
 - Dimitrije Radjenović
 
 The project comprises three separate subprojects.
-Two of them implement new *Clang* checkers for mathematical functions, and the thirds addresses an open *GitHub* issue for *Clang Static Analyzer*.
+Two of them implement new *Clang* checkers for mathematical functions, and the third addresses an open *GitHub* issue for *Clang Static Analyzer*.
 
 ## Subproject A: Checker for examining the parameters of functions `asin` and `acos`
 
@@ -29,7 +29,7 @@ To address this limitation, we extend the checker in two ways. First, we add ins
 
 #### Explanation
 
-The checker issues a warning when a function call to a function with one of the following declaraion is encountered:
+The checker issues a warning when a function call to a function with one of the following declaration is encountered:
 ```
 char *_strdup(const char *);
 char *lstrcatA(const char *, const char *);

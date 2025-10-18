@@ -10,6 +10,7 @@
 //
 //===----------------------------------------------------------------------===//
 
+#include "clang/AST/ASTContext.h"
 #include "clang/AST/Decl.h"
 #include "clang/AST/Expr.h"
 #include "clang/AST/TypeBase.h"
@@ -172,16 +173,16 @@ void WalkAST::VisitCallExpr(CallExpr *CE) {
           .Case("mkstemp", &WalkAST::checkCall_mkstemp)
           .Case("mkdtemp", &WalkAST::checkCall_mkstemp)
           .Case("mkstemps", &WalkAST::checkCall_mkstemp)
-          .Cases("strcpy", "__strcpy_chk", &WalkAST::checkCall_strcpy)
-          .Cases("strcat", "__strcat_chk", &WalkAST::checkCall_strcat)
+          .Cases({"strcpy", "__strcpy_chk"}, &WalkAST::checkCall_strcpy)
+          .Cases({"strcat", "__strcat_chk"}, &WalkAST::checkCall_strcat)
           .Case("_strdup", &WalkAST::checkCall_strdup)
-          .Cases("sprintf", "vsprintf", "scanf", "wscanf", "fscanf", "fwscanf",
-                 "vscanf", "vwscanf", "vfscanf", "vfwscanf",
+          .Cases({"sprintf", "vsprintf", "scanf", "wscanf", "fscanf", "fwscanf",
+                  "vscanf", "vwscanf", "vfscanf", "vfwscanf"},
                  &WalkAST::checkDeprecatedOrUnsafeBufferHandling)
-          .Cases("sscanf", "swscanf", "vsscanf", "vswscanf", "swprintf",
-                 "snprintf", "vswprintf", "vsnprintf", "memcpy", "memmove",
+          .Cases({"sscanf", "swscanf", "vsscanf", "vswscanf", "swprintf",
+                  "snprintf", "vswprintf", "vsnprintf", "memcpy", "memmove"},
                  &WalkAST::checkDeprecatedOrUnsafeBufferHandling)
-          .Cases("strncpy", "strncat", "memset", "fprintf",
+          .Cases({"strncpy", "strncat", "memset", "fprintf"},
                  &WalkAST::checkDeprecatedOrUnsafeBufferHandling)
           .Case("drand48", &WalkAST::checkCall_rand)
           .Case("erand48", &WalkAST::checkCall_rand)
@@ -596,6 +597,10 @@ void WalkAST::checkCall_lstrcatA(const CallExpr *CE, const FunctionDecl *FD) {
   if (!filter.check_lstrcatA)
     return;
 
+  // Verify that the operating system is Windows
+  if (!FD->getASTContext().getTargetInfo().getTriple().isOSWindows())
+    return;
+
   // Checking the type of the arguments
   const FunctionProtoType *FPT = FD->getType()->getAs<FunctionProtoType>();
   if (!FPT)
@@ -651,6 +656,10 @@ void WalkAST::checkCall_lstrcatA(const CallExpr *CE, const FunctionDecl *FD) {
 
 void WalkAST::checkCall_lstrcpyA(const CallExpr *CE, const FunctionDecl *FD) {
   if (!filter.check_lstrcpyA)
+    return;
+
+  // Verify that the operating system is Windows
+  if (!FD->getASTContext().getTargetInfo().getTriple().isOSWindows())
     return;
 
   // Checking the type of the arguments
@@ -909,6 +918,10 @@ void WalkAST::checkCall_strdup(const CallExpr *CE, const FunctionDecl *FD) {
   if (!filter.check_strdup)
     return;
 
+  // Verify that the operating system is Windows
+  if (!FD->getASTContext().getTargetInfo().getTriple().isOSWindows())
+    return;
+
   const FunctionProtoType *FPT = FD->getType()->getAs<FunctionProtoType>();
   if (!FPT)
     return;
@@ -980,12 +993,14 @@ void WalkAST::checkDeprecatedOrUnsafeBufferHandling(const CallExpr *CE,
 
   int ArgIndex =
       llvm::StringSwitch<int>(Name)
-          .Cases("scanf", "wscanf", "vscanf", "vwscanf", 0)
-          .Cases("fscanf", "fwscanf", "vfscanf", "vfwscanf", "sscanf",
-                 "swscanf", "vsscanf", "vswscanf", 1)
-          .Cases("sprintf", "vsprintf", "fprintf", 1)
-          .Cases("swprintf", "snprintf", "vswprintf", "vsnprintf", "memcpy",
-                 "memmove", "memset", "strncpy", "strncat", DEPR_ONLY)
+          .Cases({"scanf", "wscanf", "vscanf", "vwscanf"}, 0)
+          .Cases({"fscanf", "fwscanf", "vfscanf", "vfwscanf", "sscanf",
+                  "swscanf", "vsscanf", "vswscanf"},
+                 1)
+          .Cases({"sprintf", "vsprintf", "fprintf"}, 1)
+          .Cases({"swprintf", "snprintf", "vswprintf", "vsnprintf", "memcpy",
+                  "memmove", "memset", "strncpy", "strncat"},
+                 DEPR_ONLY)
           .Default(UNKNOWN_CALL);
 
   assert(ArgIndex != UNKNOWN_CALL && "Unsupported function");

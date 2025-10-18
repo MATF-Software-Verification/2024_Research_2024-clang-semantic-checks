@@ -6,7 +6,7 @@ Authors (alphabetical):
 - [Dimitrije Radjenović][domeGIT]
 
 The project comprises three separate subprojects.
-Two of them implement new *Clang* checkers for mathematical functions, and the thirds addresses an open *GitHub* issue for *Clang Static Analyzer*.
+Two of them implement new *Clang* checkers for mathematical functions, and the third addresses an open *GitHub* issue for *Clang Static Analyzer*.
 
 Description on how each checker works can be found in the file `SystemDescription.md`.
 
@@ -40,6 +40,19 @@ To run the checker follow the steps:
 1. Checkers need to be registered in file `clang/include/clang/StaticAnalyzer/Checkers/Checkers.td`.
 To do so, add the following checker declarations in the said file in `InsecureAPI` section:
     ```
+    def SecuritySyntaxChecker : Checker<"SecuritySyntaxChecker">,
+      HelpText<"Base of various security function related checkers">,
+      CheckerOptions<[
+        CmdLineOption<String,
+                      "Warn",
+                      "List of space-separated function name to be warned about. "
+                      "Defaults to an empty list.",
+                      "",
+                      InAlpha>
+      ]>,
+      Documentation<NotDocumented>,
+      Hidden;
+
     def strdup : Checker<"strdup">,
       HelpText<"Warn on uses of the '_strdup' function">,
       Dependencies<[SecuritySyntaxChecker]>,
