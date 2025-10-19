@@ -29,7 +29,7 @@ To try out the checker do ...
 ## Subproject C: Extending the list of unsafe functions in *Clang*
 
 The third part of the project is to extend the existing list of checkers for unsafe function calls in `security.insecureAPI` checker family.
-More details can be found in the [corresponding *GitHub* issue][issue-103038].
+More details can be found in the [corresponding *GitHub* issue][issue-103038], and the [first][pr-mark-insecure] and [second][pr-add-option] opened pull requests resolving the issue.
 
 In short, we extended the family of security.insecureAPI checkers with three new checkers, each of which issues a warning when it encounters `_strdup`, `lstrcatA`, or `lstrcpyA`.
 Moreover, we added a command line argument by which a user can provide a list of functions the checker should issue a warning about.
@@ -90,3 +90,5 @@ In this example, `a`, `b`, and `c` denote function names for which warnings will
 [domeGIT]: https://github.com/domeGIT
 [issue-103038]: https://github.com/llvm/llvm-project/issues/103038
 [building-llvm-docs]: https://llvm.org/docs/CMake.html
+[pr-mark-insecure]: https://github.com/llvm/llvm-project/pull/164183
+[pr-add-option]: https://github.com/llvm/llvm-project/pull/164184

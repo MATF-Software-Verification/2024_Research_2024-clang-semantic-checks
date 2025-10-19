@@ -19,7 +19,7 @@ TODO: Fill in.
 ## Subproject C: Extending the list of unsafe functions in *Clang*
 
 The third part of the project is to extend the existing list of checkers for unsafe function calls in `security.insecureAPI` checker family.
-More details can be found in the [corresponding *GitHub* issue][issue-103038].
+More details can be found in the [corresponding *GitHub* issue][issue-103038], and the [first][pr-mark-insecure] and [second][pr-add-option] opened pull requests resolving the issue.
 
 Currently, the security.insecureAPI checkers issue a warning whenever they encounter a call to an unsafe function (such as strcat). Most of the commonly known unsafe functions are already covered for Unix-based operating systems. However, their Windows-specific counterparts are not included.
 
@@ -124,3 +124,5 @@ $ ./build/bin/clang --analyze --analyzer-no-default-checks -Xanalyzer -analyzer-
 In this example, `a`, `b`, and `c` denote function names for which warnings will be issued.
 
 [issue-103038]: https://github.com/llvm/llvm-project/issues/103038
+[pr-mark-insecure]: https://github.com/llvm/llvm-project/pull/164183
+[pr-add-option]: https://github.com/llvm/llvm-project/pull/164184
