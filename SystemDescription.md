@@ -96,6 +96,8 @@ The checker can be tested by running the following command:
 $ ./build/bin/clang --analyze --analyzer-no-default-checks -Xanalyzer -analyzer-checker=security.insecureAPI.strdup test.c
 ```
 
+*Note*: These checkers issue warnings only on *Windows*.
+
 ### Command line argument for user-defined dangerous functions
 
 #### Explanation

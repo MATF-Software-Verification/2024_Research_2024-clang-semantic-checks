@@ -79,11 +79,17 @@ $ ./build/bin/clang --analyze --analyzer-no-default-checks -Xanalyzer -analyzer-
 ```
 Replace the word `strdup` with `lstrcatA` or `lstrcpyA` to try out the other two checkers.
 
-Another component of this subproject is the ability for users to specify functions that should trigger a warning when invoked. To support this functionality, the SecuritySyntaxChecker provides a command-line interface of the following form:
+*Note*: These checkers issue warnings only on *Windows*.
+
+Another component of this subproject is the ability for users to specify functions that should trigger a warning when invoked. To support this functionality, the `SecuritySyntaxChecker` provides a command-line interface of the following form:
 ```sh
 $ ./build/bin/clang --analyze --analyzer-no-default-checks -Xanalyzer -analyzer-checker=security.insecureAPI.SecuritySyntaxChecker -Xclang -analyzer-config -Xclang security.insecureAPI.SecuritySyntaxChecker:Warn="a b c" test.c
 ```
 In this example, `a`, `b`, and `c` denote function names for which warnings will be issued.
+
+### Examples
+
+See directory [`SubprojectC/examples`][program-examples] for a set of programs you can use for testing the checker.
 
 [mina-dograjic]: https://github.com/mina-dograjic
 [stemil01]: https://github.com/stemil01
@@ -92,3 +98,4 @@ In this example, `a`, `b`, and `c` denote function names for which warnings will
 [building-llvm-docs]: https://llvm.org/docs/CMake.html
 [pr-mark-insecure]: https://github.com/llvm/llvm-project/pull/164183
 [pr-add-option]: https://github.com/llvm/llvm-project/pull/164184
+[program-examples]: SubprojectC/examples
