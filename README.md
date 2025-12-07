@@ -1,32 +1,11 @@
 # Semantic checks within *Clang*
 
-Authors (alphabetical):
-- [Mina Dograjić][mina-dograjic]
+Author:
 - [Stefan Milenković][stemil01]
-- [Dimitrije Radjenović][domeGIT]
-
-The project comprises three separate subprojects.
-Two of them implement new *Clang* checkers for mathematical functions, and the third addresses an open *GitHub* issue for *Clang Static Analyzer*.
 
 Description on how each checker works can be found in the file `SystemDescription.md`.
 
-## Subproject A: Checker for examining the parameters of functions `asin` and `acos`
-
-Brief explanation what the checker does.
-
-### Usage
-
-To try out the checker do ...
-
-## Subproject B: Checker for examining the parameters of functions `atoi` and `atof`
-
-Brief explanation what the checker does.
-
-### Usage
-
-To try out the checker do ...
-
-## Subproject C: Extending the list of unsafe functions in *Clang*
+## Extending the list of unsafe functions in *Clang*
 
 The third part of the project is to extend the existing list of checkers for unsafe function calls in `security.insecureAPI` checker family.
 More details can be found in the [corresponding *GitHub* issue][issue-103038], and the [first][pr-mark-insecure] and [second][pr-add-option] opened pull requests resolving the issue.
@@ -69,7 +48,7 @@ To do so, add the following checker declarations in the said file in `InsecureAP
       Documentation<HasDocumentation>;
     ```
 
-2. Then copy the file `SubprojectC/CheckSecuritySyntaxOnly.cpp` to `clang/lib/StaticAnalyzer/Checkers`
+2. Then copy the file `UnsafeFunctionsClang/CheckSecuritySyntaxOnly.cpp` to `clang/lib/StaticAnalyzer/Checkers`
 
 3. Recompile the project (consult the official [LLVM documentation][building-llvm-docs] on how to do so)
 
@@ -81,7 +60,7 @@ Replace the word `strdup` with `lstrcatA` or `lstrcpyA` to try out the other two
 
 *Note*: These checkers issue warnings only on *Windows*.
 
-Another component of this subproject is the ability for users to specify functions that should trigger a warning when invoked. To support this functionality, the `SecuritySyntaxChecker` provides a command-line interface of the following form:
+Another component of this project is the ability for users to specify functions that should trigger a warning when invoked. To support this functionality, the `SecuritySyntaxChecker` provides a command-line interface of the following form:
 ```sh
 $ ./build/bin/clang --analyze --analyzer-no-default-checks -Xanalyzer -analyzer-checker=security.insecureAPI.SecuritySyntaxChecker -Xclang -analyzer-config -Xclang security.insecureAPI.SecuritySyntaxChecker:Warn="a b c" test.c
 ```
@@ -89,7 +68,7 @@ In this example, `a`, `b`, and `c` denote function names for which warnings will
 
 ### Examples
 
-See directory [`SubprojectC/examples`][program-examples] for a set of programs you can use for testing the checker.
+See directory [`UnsafeFunctionsClang/examples`][program-examples] for a set of programs you can use for testing the checker.
 
 [mina-dograjic]: https://github.com/mina-dograjic
 [stemil01]: https://github.com/stemil01
@@ -98,4 +77,4 @@ See directory [`SubprojectC/examples`][program-examples] for a set of programs y
 [building-llvm-docs]: https://llvm.org/docs/CMake.html
 [pr-mark-insecure]: https://github.com/llvm/llvm-project/pull/164183
 [pr-add-option]: https://github.com/llvm/llvm-project/pull/164184
-[program-examples]: SubprojectC/examples
+[program-examples]: UnsafeFunctionsClang/examples

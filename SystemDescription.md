@@ -1,22 +1,9 @@
 # Developing new semantic checks within *Clang*
 
-Authors (alphabetical):
-- Mina Dograjić
+Author:
 - Stefan Milenković
-- Dimitrije Radjenović
 
-The project comprises three separate subprojects.
-Two of them implement new *Clang* checkers for mathematical functions, and the third addresses an open *GitHub* issue for *Clang Static Analyzer*.
-
-## Subproject A: Checker for examining the parameters of functions `asin` and `acos`
-
-TODO: Fill in.
-
-## Subproject B: Checker for examining the parameters of functions `atoi` and `atof`
-
-TODO: Fill in.
-
-## Subproject C: Extending the list of unsafe functions in *Clang*
+## Extending the list of unsafe functions in *Clang*
 
 The third part of the project is to extend the existing list of checkers for unsafe function calls in `security.insecureAPI` checker family.
 More details can be found in the [corresponding *GitHub* issue][issue-103038], and the [first][pr-mark-insecure] and [second][pr-add-option] opened pull requests resolving the issue.
@@ -102,7 +89,7 @@ $ ./build/bin/clang --analyze --analyzer-no-default-checks -Xanalyzer -analyzer-
 
 #### Explanation
 
-Another component of this subproject is the ability for users to specify functions that should trigger a warning when invoked. To support this functionality, the `SecuritySyntaxChecker` provides a command-line argument `Warn` allowing users to supply a space-separated list of such functions.
+Another component of this project is the ability for users to specify functions that should trigger a warning when invoked. To support this functionality, the `SecuritySyntaxChecker` provides a command-line argument `Warn` allowing users to supply a space-separated list of such functions.
 
 That functionality is achieved by storing the list of functions in an internal variable of type `StringSet<>`.
 Then the checker issues a warning when it explores a call node with the name of the callee that belongs to the set of function names.
